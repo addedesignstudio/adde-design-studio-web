@@ -1,0 +1,133 @@
+{
+  "updated_at": "2026-11-25T18:02:08.932Z",
+  "hubs": [
+    {
+      "code": "MOG",
+      "name": "Mogadishu",
+      "country": "Somalia",
+      "lat": 2.0469,
+      "lng": 45.3182,
+      "rates_usd_sqm": {
+        "standard": 430,
+        "luxury": 620,
+        "executive": 880
+      },
+      "design_pct": 0.055,
+      "supervision_pct": 0.045,
+      "multi_floor_factor": 1.06,
+      "notes": "2026 Coastal RC specs + C30/C40 salinity resilience"
+    },
+    {
+      "code": "HGA",
+      "name": "Hargeisa",
+      "country": "Somalia",
+      "lat": 9.5624,
+      "lng": 44.077,
+      "rates_usd_sqm": {
+        "standard": 445,
+        "luxury": 640,
+        "executive": 900
+      },
+      "design_pct": 0.055,
+      "supervision_pct": 0.045,
+      "multi_floor_factor": 1.06,
+      "notes": "2026 Rocky soil excavation & Berbera logistics"
+    },
+    {
+      "code": "GRW",
+      "name": "Garowe",
+      "country": "Somalia",
+      "lat": 8.4021,
+      "lng": 48.4845,
+      "rates_usd_sqm": {
+        "standard": 455,
+        "luxury": 650,
+        "executive": 910
+      },
+      "design_pct": 0.055,
+      "supervision_pct": 0.045,
+      "multi_floor_factor": 1.06,
+      "notes": "2026 Inland haulage adjustment"
+    },
+    {
+      "code": "BSA",
+      "name": "Bosaso",
+      "country": "Somalia",
+      "lat": 11.2842,
+      "lng": 49.1816,
+      "rates_usd_sqm": {
+        "standard": 440,
+        "luxury": 635,
+        "executive": 895
+      },
+      "design_pct": 0.055,
+      "supervision_pct": 0.045,
+      "multi_floor_factor": 1.06,
+      "notes": "2026 Port access + high heat cooling envelope"
+    },
+    {
+      "code": "KSM",
+      "name": "Kismayo",
+      "country": "Somalia",
+      "lat": -0.3582,
+      "lng": 42.5454,
+      "rates_usd_sqm": {
+        "standard": 460,
+        "luxury": 660,
+        "executive": 920
+      },
+      "design_pct": 0.055,
+      "supervision_pct": 0.045,
+      "multi_floor_factor": 1.06,
+      "notes": "2026 Rebar & transport uplift"
+    },
+    {
+      "code": "NBO",
+      "name": "Nairobi",
+      "country": "Kenya",
+      "lat": -1.2921,
+      "lng": 36.783,
+      "rates_usd_sqm": {
+        "standard": 460,
+        "luxury": 690,
+        "executive": 980
+      },
+      "design_pct": 0.07,
+      "supervision_pct": 0.05,
+      "multi_floor_factor": 1.08,
+      "notes": "2026 KES 59k-127k/m2 BORAQS/AAK benchmark (@130 KES/USD)"
+    },
+    {
+      "code": "JIB",
+      "name": "Djibouti City",
+      "country": "Djibouti",
+      "lat": 11.588,
+      "lng": 43.1456,
+      "rates_usd_sqm": {
+        "standard": 580,
+        "luxury": 820,
+        "executive": 1120
+      },
+      "design_pct": 0.065,
+      "supervision_pct": 0.05,
+      "multi_floor_factor": 1.08,
+      "notes": "2026 $532-$988/m2 coastal import & heavy cooling spec"
+    },
+    {
+      "code": "ADD",
+      "name": "Addis Ababa / Jigjiga",
+      "country": "Ethiopia",
+      "lat": 9.032,
+      "lng": 38.7469,
+      "rates_usd_sqm": {
+        "standard": 360,
+        "luxury": 540,
+        "executive": 780
+      },
+      "design_pct": 0.06,
+      "supervision_pct": 0.045,
+      "multi_floor_factor": 1.07,
+      "notes": "2026 $308-$572+ diaspora import-finish adjusted (@162 ETB/USD)"
+    }
+  ]
+}
