@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>East Africa Construction Cost Estimator | Adde Design Studio</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main style="padding-top:110px;padding-bottom:5rem;">
+    <div class="container">
+      <div style="max-width:740px;margin-bottom:2.5rem;">
+        <div class="eyebrow" id="eEyebrow">LIVE REGIONAL BENCHMARK • NOV 2026</div>
+        <h1 class="h2-section" id="eTitle">East Africa Construction Cost Estimator</h1>
+        <p class="text-muted" id="eSub" style="margin-top:0.65rem;">Synced with 8 East African cities and 7 live currencies via real-time market multipliers.</p>
+      </div>
+
+      <div class="grid-2" style="align-items:start;">
+        <!-- INPUT PANEL -->
+        <div class="arch-card" style="display:flex;flex-direction:column;gap:1.25rem;">
+          <div>
+            <label class="field-label" id="lblCity">City / Regional Hub</label>
+            <select id="estCity" class="input-field"></select>
+          </div>
+          <div class="grid-2" style="gap:1rem;">
+            <div>
+              <label class="field-label" id="lblArea">Built-Up Area (m²)</label>
+              <input id="estArea" type="number" min="40" max="20000" value="320" class="input-field">
+            </div>
+            <div>
+              <label class="field-label" id="lblFloors">Floors</label>
+              <input id="estFloors" type="number" min="1" max="15" value="2" class="input-field">
+            </div>
+          </div>
+          <div>
+            <label class="field-label" id="lblFinish">Finishing Tier</label>
+            <select id="estFinish" class="input-field">
+              <option value="standard">Standard Modern</option>
+              <option value="luxury" selected>Luxury Contemporary</option>
+              <option value="executive">Executive / Institutional</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label" id="lblScope">Service Scope</label>
+            <select id="estScope" class="input-field">
+              <option value="turnkey" selected>Full Design & Turnkey Construction</option>
+              <option value="build">Construction Only (Existing Drawings)</option>
+              <option value="design">Design, 3D BIM & Stamped BOQ Only</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label" id="lblCurrency">Display Currency (7 Currencies Live)</label>
+            <select id="estCurrency" class="input-field">
+              <option value="USD">USD ($) — US Dollar</option>
+              <option value="KES">KES — Kenyan Shilling</option>
+              <option value="SOS">SOS — Somali Shilling</option>
+              <option value="DJF">DJF — Djiboutian Franc</option>
+              <option value="ETB">ETB — Ethiopian Birr</option>
+              <option value="EUR">EUR (€) — Euro</option>
+              <option value="GBP">GBP (£) — British Pound</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- RESULTS PANEL -->
+        <div class="arch-card-dark" style="color:var(--stone);">
+          <div class="eyebrow" id="resEyebrow">ESTIMATED BUDGET</div>
+          <div id="resMainTotal" class="font-serif" style="font-size:clamp(2.2rem,4vw,3.1rem);color:#F7F6F2;line-height:1.1;">$0</div>
+          <div id="resSubTotal" style="font-size:0.95rem;color:var(--bronze);font-weight:700;margin-top:0.35rem;">Base USD Equivalent</div>
+          <div id="resCityNote" style="font-size:0.8rem;color:#A5A29B;margin-top:0.5rem;"></div>
+
+          <div id="resBreakdown" style="margin:1.75rem 0;border-top:1px solid var(--line-dark);padding-top:1.25rem;display:flex;flex-direction:column;gap:0.75rem;font-size:0.92rem;"></div>
+
+          <p id="resDisclaimer" style="font-size:0.78rem;color:#A5A29B;border-left:3px solid var(--bronze);padding-left:0.75rem;margin-bottom:1.5rem;"></p>
+          <button id="forwardBriefBtn" class="btn btn-bronze" style="width:100%;">Send This Estimate to Project Brief →</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <script type="module">
+    import { initShell } from '/assets/js/components.js';
+    import { fetchStaticJson, escHtml } from '/assets/js/api.js';
+    import { getLang } from '/assets/js/i18n.js';
+
+    initShell({ transparentHero: false, activePath: 'estimator' });
+
+    const FALLBACK_HUBS = [
+      { code: 'MOG', name: 'Mogadishu', country: 'Somalia', rates_usd_sqm: { standard: 430, luxury: 620, executive: 880 }, design_pct: 0.055, supervision_pct: 0.045, multi_floor_factor: 1.06, notes: 'Coastal RC specs + salinity resilience' },
+      { code: 'HGA', name: 'Hargeisa', country: 'Somalia', rates_usd_sqm: { standard: 445, luxury: 640, executive: 900 }, design_pct: 0.055, supervision_pct: 0.045, multi_floor_factor: 1.06, notes: 'Rocky excavation & Berbera logistics' },
+      { code: 'GRW', name: 'Garowe', country: 'Somalia', rates_usd_sqm: { standard: 455, luxury: 650, executive: 910 }, design_pct: 0.055, supervision_pct: 0.045, multi_floor_factor: 1.06, notes: 'Inland haulage adjustment' },
+      { code: 'BSA', name: 'Bosaso', country: 'Somalia', rates_usd_sqm: { standard: 440, luxury: 635, executive: 895 }, design_pct: 0.055, supervision_pct: 0.045, multi_floor_factor: 1.06, notes: 'Port access + high cooling envelope' },
+      { code: 'KSM', name: 'Kismayo', country: 'Somalia', rates_usd_sqm: { standard: 460, luxury: 660, executive: 920 }, design_pct: 0.055, supervision_pct: 0.045, multi_floor_factor: 1.06, notes: 'Southern coastal & steel uplift' },
+      { code: 'NBO', name: 'Nairobi', country: 'Kenya', rates_usd_sqm: { standard: 460, luxury: 690, executive: 980 }, design_pct: 0.070, supervision_pct: 0.050, multi_floor_factor: 1.08, notes: 'AAK/BORAQS Kenya market benchmark' },
+      { code: 'JIB', name: 'Djibouti City', country: 'Djibouti', rates_usd_sqm: { standard: 580, luxury: 820, executive: 1120 }, design_pct: 0.065, supervision_pct: 0.050, multi_floor_factor: 1.08, notes: 'Coastal import & cooling spec' },
+      { code: 'ADD', name: 'Addis Ababa / Jigjiga', country: 'Ethiopia', rates_usd_sqm: { standard: 360, luxury: 540, executive: 780 }, design_pct: 0.060, supervision_pct: 0.045, multi_floor_factor: 1.07, notes: 'Diaspora import-finish adjusted' }
+    ];
+
+    let hubs = FALLBACK_HUBS;
+    let fxRates = { USD: 1, KES: 130.0, SOS: 571.0, DJF: 177.72, ETB: 162.35, EUR: 0.95, GBP: 0.79 };
+    let lastCalc = null;
+
+    async function loadFX() {
+      const urls = [
+        'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json',
+        'https://latest.currency-api.pages.dev/v1/currencies/usd.json',
+        'https://open.er-api.com/v6/latest/USD'
+      ];
+      for (const u of urls) {
+        try {
+          const r = await fetch(u);
+          if (!r.ok) continue;
+          const j = await r.json();
+          const d = j.usd || j.rates;
+          if (d) {
+            fxRates = {
+              USD: 1,
+              KES: Number(d.kes || d.KES || 130),
+              SOS: Number(d.sos || d.SOS || 571),
+              DJF: Number(d.djf || d.DJF || 177.72),
+              ETB: Number(d.etb || d.ETB || 162.35),
+              EUR: Number(d.eur || d.EUR || 0.95),
+              GBP: Number(d.gbp || d.GBP || 0.79)
+            };
+            break;
+          }
+        } catch {}
+      }
+      calculate();
+    }
+
+    function calculate() {
+      const lang = getLang();
+      const isSo = lang === 'so';
+      const cityCode = document.getElementById('estCity').value || 'MOG';
+      const area = Math.max(40, Number(document.getElementById('estArea').value) || 250);
+      const floors = Math.max(1, Number(document.getElementById('estFloors').value) || 1);
+      const finish = document.getElementById('estFinish').value;
+      const scope = document.getElementById('estScope').value;
+      const curr = document.getElementById('estCurrency').value;
+
+      const hub = hubs.find((h) => h.code === cityCode) || hubs[0];
+      const baseRate = hub.rates_usd_sqm[finish] || hub.rates_usd_sqm.standard;
+      const floorFactor = floors > 1 ? Math.pow(hub.multi_floor_factor || 1.06, Math.min(floors - 1, 6)) : 1;
+      const buildUSD = Math.round(area * baseRate * floorFactor);
+      const designFee = Math.round(buildUSD * (hub.design_pct || 0.055));
+      const supFee = Math.round(buildUSD * (hub.supervision_pct || 0.045));
+
+      let rows = [];
+      if (scope === 'design') {
+        rows.push([isSo ? 'Naqshadayn, 3D BIM & Injineeri' : 'Architecture, 3D BIM & Stamped BOQ', designFee]);
+      } else {
+        const sub = Math.round(buildUSD * 0.18), sup = Math.round(buildUSD * 0.28), mep = Math.round(buildUSD * 0.17);
+        const fin = buildUSD - (sub + sup + mep);
+        rows.push([isSo ? 'Aasaaska (Substructure)' : 'Substructure & Foundation (18%)', sub]);
+        rows.push([isSo ? 'Tiirarka & Saqafka (Superstructure)' : 'Superstructure & RC Frame (28%)', sup]);
+        rows.push([isSo ? 'Korontada & Biyaha (MEP)' : 'MEP Systems (17%)', mep]);
+        rows.push([isSo ? 'Dhammaystirka (Finishing)' : 'Architectural Finishes (37%)', fin]);
+        if (scope === 'turnkey') rows.push([isSo ? 'Naqshadayn & Injineeri' : 'Design & Engineering Fees', designFee]);
+        rows.push([isSo ? 'Kormeerka & QA' : 'Site Supervision & Quality Assurance', supFee]);
+      }
+
+      const totalUSD = rows.reduce((s, r) => s + r[1], 0);
+      const rate = fxRates[curr] || 1;
+      const conv = (n) => Math.round(n * rate).toLocaleString() + ' ' + curr;
+
+      document.getElementById('eTitle').textContent = isSo ? 'Xisaabiyaha Kharashka Dhismaha Bariga Afrika' : 'East Africa Construction Cost Estimator';
+      document.getElementById('eSub').textContent = isSo ? 'Waxay ku xiran tahay 8-da magaalo ee gobolka iyo sarifka maanta ee 7 lacagood.' : 'Synced with 8 East African cities and 7 live currencies via real-time market multipliers.';
+      document.getElementById('resMainTotal').textContent = conv(totalUSD);
+      document.getElementById('resSubTotal').textContent = `≈ $${totalUSD.toLocaleString()} USD (${curr} rate: ${rate.toFixed(2)})`;
+      document.getElementById('resCityNote').textContent = `${hub.name}, ${hub.country} — ${hub.notes}`;
+      document.getElementById('resBreakdown').innerHTML = rows.map(r => `<div style="display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.45rem;"><span style="color:#D4D0C5;">${escHtml(r[0])}</span><b>${conv(r[1])}</b></div>`).join('');
+      document.getElementById('resDisclaimer').textContent = isSo
+        ? 'Digniin Injineeri: Tirooyinkan waa qiyaas hordhac ah. Qiimaha kama dambaysta ah wuxuu u baahan yahay kormeerka booska, baaritaanka ciidda, iyo BOQ saxiixan.'
+        : 'Engineering Disclaimer: Online figures are preliminary estimates based on regional benchmarks. Final binding pricing requires site survey, soil testing, and a stamped BOQ.';
+      document.getElementById('forwardBriefBtn').textContent = isSo ? 'U Gudbi Qiyaastan Foomka Mashruuca →' : 'Send This Estimate to Project Brief →';
+
+      lastCalc = { cityCode: hub.code, city: hub.name, areaSqM: area, floors, finishTier: finish, scope, currency: curr, totalUSD };
+    }
+
+    document.getElementById('forwardBriefBtn').addEventListener('click', () => {
+      if (lastCalc) sessionStorage.setItem('adde_prefill_est', JSON.stringify(lastCalc));
+      window.location.href = '/contact.html';
+    });
+
+    ['estCity', 'estArea', 'estFloors', 'estFinish', 'estScope', 'estCurrency'].forEach((id) => {
+      document.getElementById(id).addEventListener('input', calculate);
+      document.getElementById(id).addEventListener('change', calculate);
+    });
+    window.addEventListener('adde:langchange', calculate);
+
+    (async () => {
+      const data = await fetchStaticJson('/data/estimator-rates.json').catch(() => null);
+      if (data && data.hubs && data.hubs.length) hubs = data.hubs;
+      const sel = document.getElementById('estCity');
+      sel.innerHTML = hubs.map(h => `<option value="${escHtml(h.code)}">${escHtml(h.name)} (${escHtml(h.country)})</option>`).join('');
+      await loadFX();
+    })();
+  </script>
+</body>
+</html>
