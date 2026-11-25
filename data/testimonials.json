@@ -1,0 +1,22 @@
+[
+  {
+    "id": "TEST-001",
+    "role": "Diaspora Real Estate Investor",
+    "client": "Eng. Farah Duale",
+    "location": "London / Mogadishu",
+    "headline_en": "Clarity before the first shovel hits the ground",
+    "headline_so": "Hufnaan buuxda kahor intaan dhismuhu bilaaban",
+    "quote_en": "Adde Design Studio gave us complete architectural drawings alongside a transparent itemized BOQ so we knew exact cement and steel quantities before committing.",
+    "quote_so": "Adde Design Studio waxay na siiyeen naqshad dhammaystiran iyo BOQ cad oo noo suurtageliyay inaan ogaanno kharashka dhabta ah kahor bilowga."
+  },
+  {
+    "id": "TEST-002",
+    "role": "Commercial Partner",
+    "client": "Hodan Trade Group",
+    "location": "Hargeisa",
+    "headline_en": "Climate-smart thinking for East African commerce",
+    "headline_so": "Fikir casri ah oo ku habboon ganacsiga Bariga Afrika",
+    "quote_en": "Their passive-cooling layout and clear space optimization transformed how our commercial plaza functions structurally and financially.",
+    "quote_so": "Naqshaddooda hawo-wareegga iyo sida ay u maareeyeen booska ganacsigu waxay sare u qaadday qiimaha dhismaha."
+  }
+]
