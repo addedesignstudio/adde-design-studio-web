@@ -37,7 +37,8 @@ export function initShell({ transparentHero = false, activePath = '' } = {}) {
           <a href="/contact.html" class="btn btn-bronze" style="padding:0.52rem 1rem;font-size:0.72rem;" data-i18n="nav.contact">Start Project</a>
           <button type="button" id="mobileMenuOpen" class="mobile-menu-btn">MENU</button>
         </div>
-      </div>`;
+      </div>`
+      initAnalyticsAndConsent();
   }
 
   // Mobile Drawer
