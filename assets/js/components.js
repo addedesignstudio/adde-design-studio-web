@@ -1,3 +1,4 @@
+import { initAnalyticsAndConsent } from './analytics.js';
 import { ADDE_CONFIG } from './config.js';
 import { getLang, setLang, applyTranslations } from './i18n.js';
 
