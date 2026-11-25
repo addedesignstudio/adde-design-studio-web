@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Progress Portal | Adde Design Studio</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <style>
+    .prog-track { width:100%; height:12px; background:#E5E2D9; overflow:hidden; margin:0.65rem 0; }
+    .prog-fill { height:100%; background:var(--bronze); transition:width 0.8s ease; }
+    .timeline-card { background:#fff; border:1px solid var(--line); border-left:4px solid var(--bronze); padding:1.5rem; }
+    .photo-strip { display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:0.75rem; margin-top:1rem; }
+    .photo-strip img { width:100%; aspect-ratio:4/3; object-fit:cover; cursor:zoom-in; border:1px solid var(--line); }
+    .lightbox { position:fixed; inset:0; background:rgba(18,18,18,0.94); z-index:400; display:none; align-items:center; justify-content:center; padding:1.5rem; }
+    .lightbox.open { display:flex; }
+  </style>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main style="padding-top:110px;padding-bottom:5rem;min-height:85vh;">
+    <div class="container">
+      <!-- LOGIN PANEL -->
+      <section id="portalLoginWrap" style="max-width:480px;margin:2rem auto;">
+        <div class="arch-card" style="border-top:4px solid var(--bronze);">
+          <div class="eyebrow" id="pEyebrow">CLIENT TRANSPARENCY PORTAL</div>
+          <h1 class="h2-section" style="font-size:2rem;margin-bottom:0.5rem;" id="pTitle">Access Live Site Tracker</h1>
+          <p class="text-muted" style="font-size:0.9rem;margin-bottom:1.5rem;" id="pSub">Sign in with your Project Reference Code and 6-Digit PIN to inspect real-time progress, weekly photos, weather, and PDF receipts.</p>
+
+          <form id="portalLoginForm" style="display:flex;flex-direction:column;gap:1rem;">
+            <div>
+              <label class="field-label" id="lblProjId">Project Reference Code</label>
+              <input id="pProjId" required placeholder="e.g. ADDE-2026-DEMO" class="input-field" style="text-transform:uppercase;">
+            </div>
+            <div>
+              <label class="field-label" id="lblPin">6-Digit Access PIN</label>
+              <input id="pPin" type="password" inputmode="numeric" maxlength="6" required placeholder="••••••" class="input-field" style="letter-spacing:0.35em;">
+            </div>
+            <div id="portalTurnstile"></div>
+            <div id="portalErr" style="color:#b91c1c;font-size:0.86rem;display:none;"></div>
+            <button type="submit" id="portalLoginBtn" class="btn btn-primary">Access Site Dashboard</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- AUTHENTICATED DASHBOARD -->
+      <section id="portalDash" style="display:none;">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:1rem;margin-bottom:2rem;">
+          <div>
+            <div class="eyebrow" id="dRefBadge">PROJECT ID</div>
+            <h1 class="h2-section" id="dTitle">Project Title</h1>
+            <div class="text-muted" id="dMeta" style="font-size:0.9rem;margin-top:0.25rem;"></div>
+          </div>
+          <div style="display:flex;gap:0.65rem;flex-wrap:wrap;">
+            <a id="dWaPmBtn" target="_blank" class="btn btn-bronze" style="padding:0.65rem 1.15rem;">💬 WhatsApp Project Manager</a>
+            <button id="dLogoutBtn" class="btn btn-outline" style="padding:0.65rem 1.15rem;">Sign Out</button>
+          </div>
+        </div>
+
+        <!-- PROGRESS + WEATHER + FINANCIALS -->
+        <div class="grid-3" style="margin-bottom:2.25rem;">
+          <div class="arch-card">
+            <div class="eyebrow" id="lblProg">OVERALL COMPLETION</div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <span class="font-serif" style="font-size:2.4rem;font-weight:600;" id="dPct">0%</span>
+              <span id="dPhase" style="font-size:0.82rem;font-weight:700;color:var(--bronze);"></span>
+            </div>
+            <div class="prog-track"><div id="dProgFill" class="prog-fill" style="width:0%;"></div></div>
+            <div class="text-muted" id="dDates" style="font-size:0.8rem;"></div>
+          </div>
+
+          <div class="arch-card-dark" style="color:var(--stone);">
+            <div class="eyebrow" id="lblWx">LIVE SITE WEATHER</div>
+            <div class="font-serif" style="font-size:2rem;" id="dWxTemp">--°C</div>
+            <div id="dWxCond" style="font-size:0.9rem;color:#D4D0C5;margin:0.25rem 0;"></div>
+            <div id="dWxAdv" style="font-size:0.78rem;color:var(--bronze);margin-top:0.5rem;"></div>
+          </div>
+
+          <div class="arch-card">
+            <div class="eyebrow" id="lblFin">FINANCIAL TRANSPARENCY</div>
+            <div style="display:flex;flex-direction:column;gap:0.4rem;font-size:0.92rem;">
+              <div style="display:flex;justify-content:space-between;"><span class="text-muted">Contract Sum:</span><b id="dTotalUSD">$0</b></div>
+              <div style="display:flex;justify-content:space-between;"><span class="text-muted">Total Paid:</span><b style="color:#059669;" id="dPaidUSD">$0</b></div>
+              <div style="display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:0.4rem;"><span class="text-muted">Balance Due:</span><b id="dBalUSD">$0</b></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOCUMENTS & PAYMENTS -->
+        <div class="grid-2" style="margin-bottom:2.5rem;">
+          <div class="arch-card">
+            <div class="eyebrow" id="lblDocs">CONTRACTS, BOQ & WEEKLY PDF REPORTS</div>
+            <div id="dDocsList" style="display:flex;flex-direction:column;gap:0.65rem;font-size:0.88rem;"></div>
+          </div>
+          <div class="arch-card">
+            <div class="eyebrow" id="lblPay">VERIFIED PAYMENT HISTORY</div>
+            <div id="dPaymentsList" style="display:flex;flex-direction:column;gap:0.65rem;font-size:0.88rem;"></div>
+          </div>
+        </div>
+
+        <!-- WEEKLY SITE LOGS TIMELINE -->
+        <div class="eyebrow" id="lblTimeline">WEEKLY SITE PROGRESS LOGS & PHOTOGRAPHY</div>
+        <div id="dTimeline" style="display:flex;flex-direction:column;gap:1.25rem;margin-top:0.75rem;"></div>
+      </section>
+    </div>
+  </main>
+
+  <div id="imgLightbox" class="lightbox" onclick="this.classList.remove('open')">
+    <img id="lightboxImg" src="" style="max-width:95vw;max-height:90vh;border:2px solid var(--bronze);" alt="Site Photo">
+  </div>
+
+  <footer id="site-footer"></footer>
+
+  <script type="module">
+    import { ADDE_CONFIG } from '/assets/js/config.js';
+    import { initShell } from '/assets/js/components.js';
+    import { postToGas, escHtml } from '/assets/js/api.js';
+    import { getLang } from '/assets/js/i18n.js';
+
+    initShell({ transparentHero: false, activePath: 'portal' });
+
+    let tsTok = '', portalData = null;
+
+    window.addEventListener('load', () => {
+      const savedToken = sessionStorage.getItem('adde_portal_token');
+      if (savedToken) {
+        loadDashboard(savedToken);
+      } else if (window.turnstile) {
+        window.turnstile.render('#portalTurnstile', { sitekey: ADDE_CONFIG.turnstileSiteKey, callback: (t) => { tsTok = t; } });
+      }
+    });
+
+    document.getElementById('portalLoginForm').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const errEl = document.getElementById('portalErr');
+      const btn = document.getElementById('portalLoginBtn');
+      errEl.style.display = 'none';
+      if (!tsTok) { errEl.textContent = 'Please complete security check.'; errEl.style.display = 'block'; return; }
+
+      btn.disabled = true; btn.textContent = 'Verifying PIN...';
+      try {
+        const res = await postToGas('portalLogin', {
+          projectId: document.getElementById('pProjId').value.trim(),
+          pin: document.getElementById('pPin').value.trim(),
+          turnstileToken: tsTok
+        });
+        sessionStorage.setItem('adde_portal_token', res.token);
+        window.dispatchEvent(new CustomEvent('adde:track', { detail: { name: 'portal_login', params: { project_id: res.projectId } } }));
+        await loadDashboard(res.token);
+      } catch (err) {
+        errEl.textContent = err.message; errEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Access Site Dashboard';
+      }
+    });
+
+    async function loadDashboard(token) {
+      try {
+        portalData = await postToGas('getPortalData', { token });
+        document.getElementById('portalLoginWrap').style.display = 'none';
+        document.getElementById('portalDash').style.display = 'block';
+        renderDashboard();
+      } catch (err) {
+        sessionStorage.removeItem('adde_portal_token');
+        document.getElementById('portalLoginWrap').style.display = 'block';
+        document.getElementById('portalDash').style.display = 'none';
+        const errEl = document.getElementById('portalErr');
+        errEl.textContent = err.message; errEl.style.display = 'block';
+      }
+    }
+
+    function renderDashboard() {
+      if (!portalData) return;
+      const isSo = getLang() === 'so';
+      const p = portalData.project;
+      const wx = portalData.weather;
+
+      document.getElementById('dRefBadge').textContent = `${p.id} • ${p.status}`;
+      document.getElementById('dTitle').textContent = p.title;
+      document.getElementById('dMeta').textContent = `${isSo ? 'Macmiilka:' : 'Client:'} ${p.clientName} • ${isSo ? 'Damaanadda:' : 'Warranty:'} ${p.warrantyYears} Yrs`;
+      document.getElementById('dWaPmBtn').href = `https://wa.me/${p.whatsappPM}?text=${encodeURIComponent('Salam Adde PM, update inquiry for Project: ' + p.id)}`;
+      document.getElementById('dWaPmBtn').textContent = isSo ? '💬 WhatsApp Maamulaha Mashruuca' : '💬 WhatsApp Project Manager';
+
+      document.getElementById('dPct').textContent = p.completionPct + '%';
+      document.getElementById('dProgFill').style.width = p.completionPct + '%';
+      document.getElementById('dPhase').textContent = p.currentPhase;
+      document.getElementById('dDates').textContent = `${isSo ? 'Bilowga:' : 'Start:'} ${p.startDate} | ${isSo ? 'Wareejinta:' : 'Est. Handover:'} ${p.estHandoverDate}`;
+
+      if (wx) {
+        document.getElementById('dWxTemp').textContent = `${wx.tempC}°C`;
+        document.getElementById('dWxCond').textContent = `${isSo ? wx.condition_so : wx.condition_en} • Wind ${wx.windKmh} km/h • Rain ${wx.rainProbPct}%`;
+        document.getElementById('dWxAdv').textContent = isSo ? wx.advisory_so : wx.advisory_en;
+      }
+
+      document.getElementById('dTotalUSD').textContent = '$' + Number(p.contractTotalUSD).toLocaleString();
+      document.getElementById('dPaidUSD').textContent = '$' + Number(p.totalPaidUSD).toLocaleString();
+      document.getElementById('dBalUSD').textContent = '$' + Number(p.balanceDueUSD).toLocaleString();
+
+      // Documents (Secure Private Download via GAS Base64!)
+      document.getElementById('dDocsList').innerHTML = portalData.documents.length
+        ? portalData.documents.map(d => `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.6rem;background:var(--stone);border:1px solid var(--line);">
+            <div><b>${escHtml(d.name)}</b><br><small class="text-muted">${escHtml(d.updatedAt)} • ${d.sizeKB} KB</small></div>
+            <button class="btn btn-outline doc-dl-btn" data-fid="${escHtml(d.fileId)}" style="padding:0.35rem 0.8rem;font-size:0.72rem;">PDF ↓</button>
+          </div>`).join('')
+        : `<p class="text-muted">${isSo ? 'Weli dukumiinti PDF ah lama gelin.' : 'No PDF documents published yet.'}</p>`;
+
+      document.querySelectorAll('.doc-dl-btn').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          btn.disabled = true; btn.textContent = '...';
+          try {
+            const docRes = await postToGas('downloadPortalDoc', { token: sessionStorage.getItem('adde_portal_token'), fileId: btn.dataset.fid });
+            const bin = atob(docRes.base64);
+            const arr = new Uint8Array(bin.length);
+            for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+            const url = URL.createObjectURL(new Blob([arr], { type: docRes.mimeType }));
+            const a = document.createElement('a'); a.href = url; a.download = docRes.fileName; a.click();
+          } catch (e) { alert(e.message); }
+          finally { btn.disabled = false; btn.textContent = 'PDF ↓'; }
+        });
+      });
+
+      // Payments
+      document.getElementById('dPaymentsList').innerHTML = portalData.payments.length
+        ? portalData.payments.map(t => `
+          <div style="display:flex;justify-content:space-between;padding:0.6rem;background:var(--stone);border:1px solid var(--line);">
+            <div><b>${escHtml(t.category)}</b> (${escHtml(t.date)})<br><small class="text-muted">${escHtml(t.method)} — ${escHtml(t.description)}</small></div>
+            <b>$${Number(t.amountUSD).toLocaleString()}</b>
+          </div>`).join('')
+        : `<p class="text-muted">${isSo ? 'Weli lacag-bixin lama diiwaangelin.' : 'No verified payments recorded yet.'}</p>`;
+
+      // Site Logs Timeline
+      document.getElementById('dTimeline').innerHTML = portalData.logs.length
+        ? portalData.logs.map(l => `
+          <div class="timeline-card">
+            <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:0.5rem;margin-bottom:0.5rem;">
+              <span class="eyebrow" style="margin:0;">${escHtml(String(l.date).slice(0,10))} • ${escHtml(l.logId)}</span>
+              <span style="font-size:0.78rem;color:var(--concrete);">${escHtml(l.engineer)} • ${l.workersCount} Workers • ${escHtml(l.weather)}</span>
+            </div>
+            <p style="font-size:0.96rem;">${escHtml(isSo ? l.report_so : l.report_en)}</p>
+            ${l.photos && l.photos.length ? `<div class="photo-strip">${l.photos.map(u => `<img src="${escHtml(u)}" loading="lazy" class="portal-photo" alt="Site progress">`).join('')}</div>` : ''}
+          </div>`).join('')
+        : `<p class="text-muted">${isSo ? 'Weli warbixin goobeed lama soo gelin.' : 'No field logs recorded yet.'}</p>`;
+
+      document.querySelectorAll('.portal-photo').forEach((img) => {
+        img.addEventListener('click', () => {
+          document.getElementById('lightboxImg').src = img.src;
+          document.getElementById('imgLightbox').classList.add('open');
+        });
+      });
+    }
+
+    document.getElementById('dLogoutBtn').addEventListener('click', async () => {
+      const tok = sessionStorage.getItem('adde_portal_token');
+      sessionStorage.removeItem('adde_portal_token');
+      if (tok) postToGas('portalLogout', { token: tok }).catch(() => {});
+      location.reload();
+    });
+
+    window.addEventListener('adde:langchange', renderDashboard);
+  </script>
+</body>
+</html>
