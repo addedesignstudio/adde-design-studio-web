@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Careers & Vendor Network | Adde Design Studio</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body>
+  <header id="site-header"></header>
+  <main style="padding-top:110px;padding-bottom:5rem;">
+    <div class="container" style="max-width:780px;">
+      <div class="eyebrow">TALENT & SUPPLY NETWORK</div>
+      <h1 class="h2-section" id="carTitle">Careers & Subcontractor Portal</h1>
+      <p class="text-muted" style="margin:0.5rem 0 2rem;">Apply to join our architectural/engineering team or register as an approved regional material supplier or trade subcontractor.</p>
+
+      <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;">
+        <button id="tabCareer" class="btn btn-primary" style="flex:1;">Architects & Engineers</button>
+        <button id="tabVendor" class="btn btn-outline" style="flex:1;">Suppliers & Subcontractors</button>
+      </div>
+
+      <form id="appForm" class="arch-card" style="display:flex;flex-direction:column;gap:1.1rem;">
+        <div><label class="field-label" id="lblName">Full Name *</label><input id="aName" required class="input-field"></div>
+        <div class="grid-2" style="gap:1rem;">
+          <div><label class="field-label">WhatsApp / Phone *</label><input id="aPhone" required class="input-field"></div>
+          <div><label class="field-label">Email *</label><input id="aEmail" type="email" required class="input-field"></div>
+        </div>
+        <div class="grid-2" style="gap:1rem;">
+          <div><label class="field-label">City</label><input id="aCity" value="Mogadishu" class="input-field"></div>
+          <div><label class="field-label" id="lblRole">Role Applied / Trade Specialty *</label><input id="aRole" required placeholder="e.g. Structural Engineer / Cement Supplier" class="input-field"></div>
+        </div>
+        <div id="expWrap"><label class="field-label">Years of Experience</label><input id="aExp" type="number" value="3" min="0" class="input-field"></div>
+        <div><label class="field-label">Portfolio / CV / Company Profile Link (Google Drive / LinkedIn)</label><input id="aLink" type="url" placeholder="https://..." class="input-field"></div>
+        <div><label class="field-label">Notes</label><textarea id="aNotes" rows="3" class="input-field"></textarea></div>
+        <div id="carTurnstile"></div>
+        <div id="appMsg" style="font-size:0.9rem;font-weight:700;"></div>
+        <button type="submit" id="appSubmitBtn" class="btn btn-bronze">Submit Registration</button>
+      </form>
+    </div>
+  </main>
+  <footer id="site-footer"></footer>
+  <script type="module">
+    import { ADDE_CONFIG } from '/assets/js/config.js';
+    import { initShell } from '/assets/js/components.js';
+    import { postToGas } from '/assets/js/api.js';
+    initShell({ transparentHero: false, activePath: 'careers' });
+
+    let mode = 'career', tsTok = '';
+    window.addEventListener('load', () => {
+      if (window.turnstile) {
+        window.turnstile.render('#carTurnstile', { sitekey: ADDE_CONFIG.turnstileSiteKey, callback: (t) => { tsTok = t; } });
+      }
+    });
+
+    const switchMode = (m) => {
+      mode = m;
+      document.getElementById('tabCareer').className = m === 'career' ? 'btn btn-primary' : 'btn btn-outline';
+      document.getElementById('tabVendor').className = m === 'vendor' ? 'btn btn-primary' : 'btn btn-outline';
+      document.getElementById('lblName').textContent = m === 'vendor' ? 'Company / Subcontractor Name *' : 'Full Name *';
+      document.getElementById('expWrap').style.display = m === 'career' ? 'block' : 'none';
+    };
+    document.getElementById('tabCareer').onclick = () => switchMode('career');
+    document.getElementById('tabVendor').onclick = () => switchMode('vendor');
+
+    document.getElementById('appForm').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const msg = document.getElementById('appMsg');
+      const btn = document.getElementById('appSubmitBtn');
+      if (!tsTok) { msg.style.color = '#b91c1c'; msg.textContent = 'Please complete security check.'; return; }
+      btn.disabled = true; btn.textContent = 'Submitting...';
+      try {
+        const payload = mode === 'vendor'
+          ? { appType: 'vendor', name: aName.value, contactPerson: aName.value, phone: aPhone.value, email: aEmail.value, city: aCity.value, specialty: aRole.value, linkUrl: aLink.value, turnstileToken: tsTok }
+          : { appType: 'career', name: aName.value, phone: aPhone.value, email: aEmail.value, city: aCity.value, roleApplied: aRole.value, yearsExp: aExp.value, linkUrl: aLink.value, notes: aNotes.value, turnstileToken: tsTok };
+        const res = await postToGas('submitApplication', payload);
+        msg.style.color = '#059669'; msg.textContent = 'Received cleanly! Reference: ' + res.refId;
+        ev.target.reset();
+      } catch (err) {
+        msg.style.color = '#b91c1c'; msg.textContent = err.message;
+      } finally { btn.disabled = false; btn.textContent = 'Submit Registration'; }
+    });
+  </script>
+</body>
+</html>
