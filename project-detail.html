@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Case Study | Adde Design Studio</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <style>
+    .ba-container { position:relative; width:100%; aspect-ratio:16/9; overflow:hidden; background:#121212; user-select:none; touch-action:pan-y; border:1px solid var(--line); }
+    .ba-container img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; }
+    .ba-after-wrap { position:absolute; inset:0; width:50%; overflow:hidden; }
+    .ba-after-wrap img { width:100%; max-width:none; height:100%; object-fit:cover; }
+    .ba-divider { position:absolute; top:0; bottom:0; left:50%; width:3px; background:var(--bronze); cursor:ew-resize; z-index:10; touch-action:none; }
+    .ba-handle { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:44px; height:44px; border-radius:50%; background:var(--charcoal); border:2px solid var(--bronze); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; box-shadow:0 4px 16px rgba(0,0,0,0.45); }
+    .ba-tag { position:absolute; bottom:1rem; padding:0.35rem 0.75rem; background:rgba(18,18,18,0.85); color:#F7F6F2; font-size:0.72rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; z-index:5; }
+    .spec-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; background:#fff; border:1px solid var(--line); padding:1.5rem; margin:2rem 0; }
+    @media(min-width:768px){ .spec-grid { grid-template-columns:repeat(5,1fr); } }
+    .yt-facade { position:relative; aspect-ratio:16/9; background:#121212; cursor:pointer; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .modal-overlay { position:fixed; inset:0; background:rgba(18,18,18,0.92); z-index:300; display:none; align-items:center; justify-content:center; padding:1.5rem; flex-direction:column; }
+    .modal-overlay.open { display:flex; }
+  </style>
+</head>
+<body>
+  <header id="site-header"></header>
+
+  <main style="padding-top:105px;padding-bottom:5rem;">
+    <div class="container" id="detailRoot">
+      <p class="text-muted">Loading architectural case study...</p>
+    </div>
+  </main>
+
+  <!-- Zoomable Floorplan Modal -->
+  <div id="planModal" class="modal-overlay">
+    <div style="display:flex;gap:0.75rem;margin-bottom:1rem;">
+      <button id="zoomInBtn" class="btn btn-bronze" style="padding:0.45rem 0.9rem;">Zoom +</button>
+      <button id="zoomOutBtn" class="btn btn-outline-light" style="padding:0.45rem 0.9rem;">Zoom -</button>
+      <button id="closeModalBtn" class="btn btn-outline-light" style="padding:0.45rem 0.9rem;">Close ✕</button>
+    </div>
+    <div style="overflow:auto;max-width:95vw;max-height:80vh;background:#fff;padding:1rem;">
+      <img id="modalPlanImg" src="" alt="Floor Plan" style="transform-origin:top left;transition:transform 0.2s;">
+    </div>
+  </div>
+
+  <footer id="site-footer"></footer>
+
+  <script type="module">
+    import { initShell } from '/assets/js/components.js';
+    import { fetchStaticJson, escHtml } from '/assets/js/api.js';
+    import { getLang } from '/assets/js/i18n.js';
+
+    initShell({ transparentHero: false, activePath: 'projects' });
+
+    let projects = [], currentProj = null, currentIdx = 0, zoomScale = 1;
+
+    function initSlider() {
+      const box = document.getElementById('baBox');
+      const wrap = document.getElementById('baAfterWrap');
+      const afterImg = document.getElementById('baAfterImg');
+      const div = document.getElementById('baDivider');
+      if (!box || !wrap || !div) return;
+
+      const syncImgWidth = () => { if (afterImg) afterImg.style.width = box.clientWidth + 'px'; };
+      syncImgWidth();
+      window.addEventListener('resize', syncImgWidth);
+
+      const moveTo = (clientX) => {
+        const rect = box.getBoundingClientRect();
+        let pct = ((clientX - rect.left) / rect.width) * 100;
+        pct = Math.max(5, Math.min(95, pct));
+        wrap.style.width = pct + '%';
+        div.style.left = pct + '%';
+      };
+
+      let dragging = false;
+      div.addEventListener('pointerdown', (e) => { dragging = true; div.setPointerCapture(e.pointerId); });
+      box.addEventListener('pointerdown', (e) => { dragging = true; moveTo(e.clientX); });
+      window.addEventListener('pointermove', (e) => { if (dragging) moveTo(e.clientX); });
+      window.addEventListener('pointerup', () => { dragging = false; });
+    }
+
+    function renderDetail() {
+      if (!currentProj) return;
+      const p = currentProj;
+      const lang = getLang();
+      const isSo = lang === 'so';
+      const title = isSo ? (p.title_so || p.title_en) : p.title_en;
+      const challenge = isSo ? (p.challenge_so || p.challenge_en) : p.challenge_en;
+      const solution = isSo ? (p.solution_so || p.solution_en) : p.solution_en;
+      const prevP = projects[(currentIdx - 1 + projects.length) % projects.length];
+      const nextP = projects[(currentIdx + 1) % projects.length];
+
+      const hasCompare = Boolean(p.reality_or_section_url);
+      const rightLabel = p.status === 'Completed' ? (isSo ? 'Dhismaha Dhabta ah' : 'Built Reality') : (isSo ? 'Gudaha / Qorshaha' : 'Interior / Section');
+      const leftLabel = isSo ? 'Naqshadda 3D' : '3D Design';
+
+      const heroVisual = hasCompare ? `
+        <div id="baBox" class="ba-container">
+          <img src="${escHtml(p.render_url)}" alt="${escHtml(title)} 3D">
+          <div id="baAfterWrap" class="ba-after-wrap">
+            <img id="baAfterImg" src="${escHtml(p.reality_or_section_url)}" alt="${escHtml(title)} Comparison">
+          </div>
+          <div id="baDivider" class="ba-divider"><div class="ba-handle">⇄</div></div>
+          <span class="ba-tag" style="left:1rem;">${leftLabel}</span>
+          <span class="ba-tag" style="right:1rem;">${rightLabel}</span>
+        </div>
+        <p class="text-muted" style="font-size:0.8rem;margin-top:0.5rem;">${isSo ? 'Jiid xariiqda dhexe si aad u isbarbardhigto.' : 'Drag or swipe the center handle to compare 3D design vs. secondary view.'}</p>
+      ` : `<div class="project-thumb" style="aspect-ratio:16/9;"><img src="${escHtml(p.render_url)}" alt="${escHtml(title)}"></div>`;
+
+      const galleryHtml = (p.gallery && p.gallery.length) ? `
+        <div style="margin-top:3rem;">
+          <h3 class="font-serif" style="font-size:1.5rem;margin-bottom:1.25rem;">${isSo ? 'Sawirrada Mashruuca' : 'Visual Gallery'}</h3>
+          <div class="grid-2">${p.gallery.map(u => `<img src="${escHtml(u)}" style="width:100%;aspect-ratio:16/10;object-fit:cover;border:1px solid var(--line);" loading="lazy">`).join('')}</div>
+        </div>` : '';
+
+      const floorHtml = p.floorplan_url ? `
+        <div style="margin-top:3rem;" class="arch-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <h3 class="font-serif" style="font-size:1.4rem;">${isSo ? 'Qorshaha Dabaqyada' : 'Floor Plans & Technical Drawings'}</h3>
+            <button id="openPlanBtn" class="btn btn-outline" style="padding:0.45rem 1rem;">${isSo ? 'Waynee (Zoom)' : 'Expand & Zoom'}</button>
+          </div>
+          <img src="${escHtml(p.floorplan_url)}" style="max-height:420px;margin:0 auto;" alt="Floor plan">
+        </div>` : '';
+
+      const mediaHtml = (p.youtube_id || p.sketchfab_id) ? `
+        <div style="margin-top:3rem;" class="grid-2">
+          ${p.youtube_id ? `<div>
+            <h3 class="font-serif" style="font-size:1.35rem;margin-bottom:0.75rem;">4K Walkthrough</h3>
+            <div class="yt-facade" id="ytFacade" data-yt="${escHtml(p.youtube_id)}">
+              <img src="https://img.youtube.com/vi/${escHtml(p.youtube_id)}/hqdefault.jpg" style="width:100%;height:100%;object-fit:cover;opacity:0.75;">
+              <span class="btn btn-bronze" style="position:absolute;">▶ Play Walkthrough</span>
+            </div>
+          </div>` : ''}
+          ${p.sketchfab_id ? `<div>
+            <h3 class="font-serif" style="font-size:1.35rem;margin-bottom:0.75rem;">Interactive 3D BIM</h3>
+            <iframe title="3D Model" style="width:100%;aspect-ratio:16/9;border:1px solid var(--line);" src="https://sketchfab.com/models/${escHtml(p.sketchfab_id)}/embed" allowfullscreen></iframe>
+          </div>` : ''}
+        </div>` : '';
+
+      document.getElementById('detailRoot').innerHTML = `
+        <a href="/projects.html" style="font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--bronze);">← ${isSo ? 'Ku Noqo Mashaariicda' : 'Back to Projects'}</a>
+        <h1 class="h2-section" style="margin:1rem 0 1.5rem;">${escHtml(title)}</h1>
+        ${heroVisual}
+        <div class="spec-grid">
+          <div><div class="eyebrow">${isSo ? 'Magaalada' : 'Location'}</div><b>${escHtml(p.city)}</b></div>
+          <div><div class="eyebrow">${isSo ? 'Cabirka' : 'Built Area'}</div><b>${escHtml(p.area_sqm)} m²</b></div>
+          <div><div class="eyebrow">${isSo ? 'Sannadka' : 'Year'}</div><b>${escHtml(p.year)}</b></div>
+          <div><div class="eyebrow">${isSo ? 'Heerka' : 'Status'}</div><b>${escHtml(p.status)}</b></div>
+          <div><div class="eyebrow">${isSo ? 'Adeegga' : 'Scope'}</div><b>${escHtml(p.scope)}</b></div>
+        </div>
+        <div class="grid-2">
+          <div class="arch-card"><div class="eyebrow">${isSo ? 'Caqabadda' : 'The Challenge'}</div><p>${escHtml(challenge)}</p></div>
+          <div class="arch-card"><div class="eyebrow">${isSo ? 'Xalka Injineeriyada' : 'Architectural Solution'}</div><p>${escHtml(solution)}</p></div>
+        </div>
+        ${floorHtml}
+        ${galleryHtml}
+        ${mediaHtml}
+        <div style="margin-top:3.5rem;padding:2.5rem;background:var(--charcoal);color:var(--stone);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1.5rem;">
+          <div>
+            <div class="eyebrow">${isSo ? 'NAQSHAD KAN LA MID AH' : 'COMMISSION SIMILAR'}</div>
+            <h3 class="font-serif" style="font-size:1.65rem;">${isSo ? 'Ma rabtaa dhisme kan la mid ah?' : 'Ready to design or build a similar project?'}</h3>
+          </div>
+          <a href="/contact.html?type=${encodeURIComponent(p.category)}&city=${encodeURIComponent(p.city)}" class="btn btn-bronze">${isSo ? 'Bilow Codsigaaga' : 'Start Your Project'} →</a>
+        </div>
+        <div style="margin-top:2.5rem;display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:1.5rem;font-size:0.88rem;font-weight:700;">
+          <a href="/project-detail.html?slug=${encodeURIComponent(prevP.slug)}">← ${escHtml(isSo ? prevP.title_so : prevP.title_en)}</a>
+          <a href="/project-detail.html?slug=${encodeURIComponent(nextP.slug)}">${escHtml(isSo ? nextP.title_so : nextP.title_en)} →</a>
+        </div>`;
+
+      initSlider();
+      document.getElementById('openPlanBtn')?.addEventListener('click', () => {
+        zoomScale = 1;
+        document.getElementById('modalPlanImg').src = p.floorplan_url;
+        document.getElementById('modalPlanImg').style.transform = 'scale(1)';
+        document.getElementById('planModal').classList.add('open');
+      });
+      document.getElementById('ytFacade')?.addEventListener('click', function() {
+        const ytId = this.dataset.yt;
+        this.innerHTML = `<iframe style="width:100%;height:100%;" src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+      });
+    }
+
+    document.getElementById('zoomInBtn').onclick = () => { zoomScale = Math.min(3, zoomScale + 0.35); document.getElementById('modalPlanImg').style.transform = `scale(${zoomScale})`; };
+    document.getElementById('zoomOutBtn').onclick = () => { zoomScale = Math.max(0.7, zoomScale - 0.35); document.getElementById('modalPlanImg').style.transform = `scale(${zoomScale})`; };
+    document.getElementById('closeModalBtn').onclick = () => document.getElementById('planModal').classList.remove('open');
+    window.addEventListener('adde:langchange', renderDetail);
+
+    (async () => {
+      projects = await fetchStaticJson('/data/projects.json').catch(() => []);
+      const slug = new URLSearchParams(window.location.search).get('slug');
+      currentIdx = Math.max(0, projects.findIndex((x) => x.slug === slug));
+      currentProj = projects[currentIdx] || null;
+      renderDetail();
+    })();
+  </script>
+</body>
+</html>
