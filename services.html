@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services & Deliverables | Adde Design Studio</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <header id="site-header"></header>
+  <main style="padding-top:110px;padding-bottom:5rem;">
+    <div class="container">
+      <div class="eyebrow" id="sEb">INTEGRATED CAPABILITIES</div>
+      <h1 class="h2-section" id="sTitle" style="max-width:760px;">From Concept Sketch to Turnkey Handover.</h1>
+      <p class="text-muted" id="sSub" style="max-width:680px;margin:0.75rem 0 3rem;">Every phase comes with concrete engineering deliverables so nothing is left to chance.</p>
+
+      <div id="pillarsGrid" class="grid-2"></div>
+
+      <div style="margin-top:3.5rem;padding:2.5rem;background:var(--charcoal);color:var(--stone);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1.5rem;">
+        <div>
+          <h3 class="font-serif" style="font-size:1.65rem;" id="sCtaTitle">Calculate your project scope in 60 seconds.</h3>
+        </div>
+        <div style="display:flex;gap:1rem;">
+          <a href="/estimator.html" class="btn btn-outline-light" data-i18n="nav.estimator">Cost Estimator</a>
+          <a href="/contact.html" class="btn btn-bronze" data-i18n="nav.contact">Start Project</a>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer id="site-footer"></footer>
+  <script type="module">
+    import { initShell } from '/assets/js/components.js';
+    import { getLang } from '/assets/js/i18n.js';
+    initShell({ transparentHero: false, activePath: 'services' });
+
+    const PILLARS = {
+      en: [
+        { num: '01', t: 'Architecture & 3D BIM Design', d: 'Site orientation, passive-cooling spatial layouts, luxury interior architecture, landscape design, photorealistic renders & 4K walkthroughs.', deliv: ['Full 2D Architectural Package (PDF + CAD)', '3D BIM Interactive Model & High-Res Renders', 'Interior Material & Lighting Schedule'] },
+        { num: '02', t: 'Structural, MEP & BOQ Engineering', d: 'Reinforced concrete frame analysis, seismic & coastal salinity specs, electrical/solar/plumbing routing, and real-market Bills of Quantities.', deliv: ['Stamped Structural Calculations & Rebar Details', 'Full MEP Schematics (Power, Solar, Plumbing, HVAC)', 'Itemized Regional Market BOQ (Excel + PDF)'] },
+        { num: '03', t: 'Turnkey Construction & Renovation', d: 'Full-cycle execution by vetted engineering teams with transparent procurement and milestone-locked agreements across East Africa.', deliv: ['Fixed-Milestone Turnkey Contract', 'Verified Material Sourcing & Site Logistics', 'As-Built Drawings & Key Handover Package'] },
+        { num: '04', t: 'Site Supervision & Quality Assurance', d: 'Independent daily site oversight, concrete slump/cube verification, steel inspection, HSE compliance, and Diaspora Client Portal reporting.', deliv: ['Live Client Portal Weekly Visual Slides PDF', 'Concrete & Reinforcement Inspection Logs', '1–5 Year Structural & Workmanship Warranty'] }
+      ],
+      so: [
+        { num: '01', t: 'Naqshadaynta & 3D BIM', d: 'Jiheynta dhulka, naqshadda hawo-wareegga dabiiciga ah, naqshadda gudaha, muuqaallo 3D ah & video walkthrough.', deliv: ['Dukumiintiga Naqshadda 2D (PDF + CAD)', 'Moodelka 3D BIM & Sawirro Tayo Sare ah', 'Jadwalka Qalabka & Nalalka Gudaha'] },
+        { num: '02', t: 'Injineeriyada, MEP & BOQ', d: 'Xisaabinta shubka & birta, qorshaha korontada, cadceedda (Solar), biyaha, iyo qiyaasta qiimaha suuqa ee BOQ.', deliv: ['Naqshadda Birta & Shubka oo Saxiixan', 'Qorshaha MEP (Koronto, Biyo, Hawo-siin)', 'BOQ Dhamaystiran oo Suuqa Gobolka ah'] },
+        { num: '03', t: 'Dhisme Buuxa (Turnkey)', d: 'Dhisme dhamaystiran oo furaha gacanta lagaaga saarayo iyadoo la raacayo heshiisyo marxalado leh oo hufan.', deliv: ['Heshiis Marxalado Leh (Milestone Contract)', 'Keenista Agabka Tayada Leh', 'Wareejinta Furaha & As-Built Drawings'] },
+        { num: '04', t: 'Kormeerka & Hubinta Tayada', d: 'Kormeer maalinle ah, tijaabada shubka & birta, amniga shaqaalaha (HSE), iyo warbixinta toddobaadlaha ah ee Client Portal.', deliv: ['Warbixinta Sawirrada Toddobaadlaha ah (PDF)', 'Diiwaanka Tijaabada Shubka & Birta', 'Damaanad 1–5 Sano ah'] }
+      ]
+    };
+
+    function render() {
+      const lang = getLang();
+      const isSo = lang === 'so';
+      document.getElementById('sTitle').textContent = isSo ? 'Laga Bilaabo Fikirka Ilaa Wareejinta Furaha.' : 'From Concept Sketch to Turnkey Handover.';
+      document.getElementById('sSub').textContent = isSo ? 'Marxalad kasta waxaa la socda dukumiintiyo injineeri ah oo cad.' : 'Every phase comes with concrete engineering deliverables so nothing is left to chance.';
+      document.getElementById('sCtaTitle').textContent = isSo ? 'Xisaabi qiyaasta mashruucaaga 60 ilbiriqsi gudahood.' : 'Calculate your project scope in 60 seconds.';
+      document.getElementById('pillarsGrid').innerHTML = (PILLARS[lang] || PILLARS.en).map(p => `
+        <div class="arch-card">
+          <div class="eyebrow">PILLAR ${p.num}</div>
+          <h2 class="font-serif" style="font-size:1.55rem;margin-bottom:0.75rem;">${p.t}</h2>
+          <p class="text-muted" style="margin-bottom:1.25rem;">${p.d}</p>
+          <div style="border-top:1px solid var(--line);padding-top:1rem;">
+            <div style="font-size:0.74rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem;">${isSo ? 'Waxa Gacanta Laga Saaro:' : 'Client Deliverables:'}</div>
+            <ul style="padding-left:1.1rem;font-size:0.88rem;display:flex;flex-direction:column;gap:0.35rem;">${p.deliv.map(d => `<li>${d}</li>`).join('')}</ul>
+          </div>
+        </div>`).join('');
+    }
+    window.addEventListener('adde:langchange', render);
+    render();
+  </script>
+</body>
+</html>
