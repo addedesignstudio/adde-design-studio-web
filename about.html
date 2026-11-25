@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Adde Design Studio | Leadership & Warranty</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <header id="site-header"></header>
+  <main style="padding-top:110px;padding-bottom:5rem;">
+    <div class="container" id="aboutRoot"></div>
+  </main>
+  <footer id="site-footer"></footer>
+  <script type="module">
+    import { initShell } from '/assets/js/components.js';
+    import { getLang } from '/assets/js/i18n.js';
+    initShell({ transparentHero: false, activePath: 'about' });
+
+    function render() {
+      const isSo = getLang() === 'so';
+      document.getElementById('aboutRoot').innerHTML = `
+        <div class="eyebrow">${isSo ? 'NAGU SAABSAN' : 'ABOUT ADDE DESIGN STUDIO'}</div>
+        <h1 class="h2-section" style="max-width:780px;">${isSo ? 'Isku Xirka Fanka Naqshadaynta & Awoodda Dhismaha.' : 'Bridging Architectural Vision and Disciplined Construction.'}</h1>
+        <p class="text-muted" style="max-width:720px;margin:0.85rem 0 3rem;">${isSo ? 'Waxaa loo aasaasay inuu wax ka beddelo tayada dhismaha Bariga Afrika: hal shirkad oo isku haysa naqshad casri ah, xisaabin injineeri, iyo fulin hufan.' : 'Founded to raise the standard of built environments across Somalia, Kenya, Djibouti, and Ethiopia—uniting climate-smart design, stamped engineering, and transparent turnkey delivery.'}</p>
+
+        <div class="grid-2" style="margin-bottom:3.5rem;">
+          <div class="arch-card"><div class="eyebrow">${isSo ? 'ARAGTIDA (VISION)' : 'OUR VISION'}</div><p>${isSo ? 'Inaan noqonno shirkadda ugu kalsoonida badan Geeska Afrika ee naqshadaynta waarta iyo dhismaha casriga ah.' : 'To set the benchmark for climate-resilient architecture and accountable Design-Build execution across East & Horn of Africa.'}</p></div>
+          <div class="arch-card"><div class="eyebrow">${isSo ? 'DAMAANADDA DHISMAHA' : 'STRUCTURAL WARRANTY'}</div><p>${isSo ? 'Mashruuc kasta oo Turnkey ah wuxuu leeyahay 1 Sano oo damaanadda cilladaha (Workmanship) & ilaa 5 Sano oo Damaanadda Aasaaska & Tiirarka ah.' : 'Every Turnkey build is backed by a 1-Year Workmanship/MEP Defects Warranty and up to 5-Year Structural Integrity Warranty.'}</p></div>
+        </div>
+
+        <div class="eyebrow">${isSo ? 'QAAB-DHISMEEDKA KOOXDA (ORGANOGRAM)' : 'STUDIO & EXECUTION LEADERSHIP'}</div>
+        <div class="grid-3">
+          <div class="arch-card"><b>Principal Architect & Founder</b><br><small class="text-muted">${isSo ? 'Naqshadaynta Guud, 3D BIM & Xiriirka Macaamiisha' : 'Design Direction, 3D BIM & Client Advisory'}</small></div>
+          <div class="arch-card"><b>Lead Structural & Civil Engineer</b><br><small class="text-muted">${isSo ? 'Xisaabinta Culeyska, Birta & Baaritaanka Ciidda' : 'RC Frame Analysis, Rebar Detailing & Soil QA'}</small></div>
+          <div class="arch-card"><b>MEP & Sustainability Lead</b><br><small class="text-muted">${isSo ? 'Korontada, Cadceedda (Solar), Biyaha & Hawo-siinta' : 'Power, Solar Integration, Plumbing & HVAC'}</small></div>
+          <div class="arch-card"><b>Quantity Surveyor (QS)</b><br><small class="text-muted">${isSo ? 'Qiimaynta Suuqa & Diyaarinta BOQ-ga' : 'Regional BOQ Costing & Contract Auditing'}</small></div>
+          <div class="arch-card"><b>Site Supervisors & HSE</b><br><small class="text-muted">${isSo ? 'Maamulka Goobta, Amniga & Sawirrada Telegram' : 'Daily Field Supervision, Safety & Portal Logs'}</small></div>
+          <div class="arch-card"><b>Procurement & Finance</b><br><small class="text-muted">${isSo ? 'Keenista Agabka & Rasiidyada Rasmiga ah' : 'Verified Material Sourcing & Ledger Auditing'}</small></div>
+        </div>`;
+    }
+    window.addEventListener('adde:langchange', render);
+    render();
+  </script>
+</body>
+</html>
