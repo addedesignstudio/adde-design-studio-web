@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Process, QA & Diaspora Trust | Adde Design Studio</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <header id="site-header"></header>
+  <main style="padding-top:110px;padding-bottom:5rem;">
+    <div class="container" id="procRoot"></div>
+  </main>
+  <footer id="site-footer"></footer>
+  <script type="module">
+    import { initShell } from '/assets/js/components.js';
+    import { getLang } from '/assets/js/i18n.js';
+    initShell({ transparentHero: false, activePath: 'process' });
+
+    function render() {
+      const isSo = getLang() === 'so';
+      document.getElementById('procRoot').innerHTML = `
+        <div class="eyebrow">${isSo ? 'QAABKA FULINTA & TAYADA' : 'QUALITY ASSURANCE & METHODOLOGY'}</div>
+        <h1 class="h2-section" style="max-width:780px;">${isSo ? 'Dhisme La Hubo oo Meesha Ka Saara Walaaca Qurbo-joogta.' : 'Engineered Transparency That Eliminates Construction Risk.'}</h1>
+        <p class="text-muted" style="max-width:700px;margin:0.75rem 0 3rem;">${isSo ? 'Waa kan sida aan u ilaalino tayada shubka, birta, amniga shaqaalaha (HSE), iyo lacagtaada marxalad kasta.' : 'How we protect structural integrity, material quality, site safety (HSE), and your capital at every stage.'}</p>
+
+        <div class="grid-3" style="margin-bottom:3rem;">
+          <div class="arch-card"><div class="eyebrow">01 / GEOTECHNICAL & CONCRETE</div><h3 class="font-serif" style="font-size:1.3rem;margin-bottom:0.5rem;">${isSo ? 'Tijaabada Ciidda & Shubka' : 'Soil, Slump & Cube Testing'}</h3><p class="text-muted" style="font-size:0.9rem;">${isSo ? 'Hubinta adkeysiga ciidda kahor qodidda iyo baaritaanka tayada shubka (C25/C30/C40) & birta.' : 'Geotechnical soil verification before foundation excavation plus concrete slump/cube & rebar grade checks before every slab pour.'}</p></div>
+          <div class="arch-card"><div class="eyebrow">02 / HSE SITE COMPLIANCE</div><h3 class="font-serif" style="font-size:1.3rem;margin-bottom:0.5rem;">${isSo ? 'Amniga Goobta Shaqada' : 'Health, Safety & Environment'}</h3><p class="text-muted" style="font-size:0.9rem;">${isSo ? 'PPE buuxda (koofiyado, kabo adag), xayndaabka goobta, iyo digniinaha cimilada subax kasta.' : 'Mandatory PPE gear, perimeter hoarding, scaffolding safety checks, and daily 7 AM site weather alerts.'}</p></div>
+          <div class="arch-card"><div class="eyebrow">03 / LIVE CLIENT PORTAL</div><h3 class="font-serif" style="font-size:1.3rem;margin-bottom:0.5rem;">${isSo ? 'La-socodka Toddobaadlaha' : 'Weekly Photo & PDF Reporting'}</h3><p class="text-muted" style="font-size:0.9rem;">${isSo ? 'Sawirro toos ah, warbixinta injineerka, iyo xisaabaadka oo lagaa daawado Client Portal.' : 'Timestamped weekly site photos, AI-verified bilingual progress logs, and financial receipts inside your private Client Portal.'}</p></div>
+        </div>
+
+        <div class="arch-card-dark" style="color:var(--stone);">
+          <div class="eyebrow">${isSo ? 'JADWALKA LACAG-BIXINTA' : 'MILESTONE ESCROW PAYMENT SCHEDULE'}</div>
+          <h3 class="font-serif" style="font-size:1.6rem;margin-bottom:1.5rem;">${isSo ? 'Lacagtu Waxay Raacdaa Horumarka Dhabta ah' : 'You Pay Only When Verified Stages Are Completed'}</h3>
+          <div class="grid-5">
+            <div style="border-top:3px solid var(--bronze);padding-top:0.75rem;"><b>20%</b><br><small style="color:#B8B4AA;">${isSo ? 'Bilowga & Aasaaska' : 'Mobilization & Substructure'}</small></div>
+            <div style="border-top:3px solid var(--bronze);padding-top:0.75rem;"><b>25%</b><br><small style="color:#B8B4AA;">${isSo ? 'Tiirarka & Saqafyada' : 'Superstructure & Slabs'}</small></div>
+            <div style="border-top:3px solid var(--bronze);padding-top:0.75rem;"><b>25%</b><br><small style="color:#B8B4AA;">${isSo ? 'Derbiyada, Korontada & Biyaha' : 'Masonry & First-Fix MEP'}</small></div>
+            <div style="border-top:3px solid var(--bronze);padding-top:0.75rem;"><b>20%</b><br><small style="color:#B8B4AA;">${isSo ? 'Dhammaystirka & Rinjiga' : 'Finishes & Fixtures'}</small></div>
+            <div style="border-top:3px solid #10b981;padding-top:0.75rem;"><b>10%</b><br><small style="color:#B8B4AA;">${isSo ? 'Hubinta & Wareejinta Furaha' : 'Snagging & Key Handover'}</small></div>
+          </div>
+        </div>`;
+    }
+    window.addEventListener('adde:langchange', render);
+    render();
+  </script>
+</body>
+</html>
