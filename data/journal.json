@@ -1,0 +1,35 @@
+[
+  {
+    "id": "POST-001",
+    "slug": "east-africa-construction-cost-boq-guide",
+    "date": "Wed Nov 25",
+    "category": "Engineering & Cost",
+    "author": "Adde Engineering Desk",
+    "title_en": "How to Accurately Estimate Modern Villa & Commercial Construction Costs in East Africa",
+    "title_so": "Sidee Si Sax ah Loogu Qiyaasaa Kharashka Dhismaha Villa & Ganacsiga ee Bariga Afrika?",
+    "body_en": "Across Mogadishu, Hargeisa, Garowe, Djibouti, and Nairobi, builds stall when investors guess costs without a measured Bill of Quantities (BOQ). Breaking down costs into Substructure (15-20%), Superstructure (25-30%), MEP (15-18%), and Finishes (30-40%) protects your capital.",
+    "body_so": "Guud ahaan Muqdisho, Hargeysa, Garoowe, Jabuuti, iyo Nairobi, dhismuhu wuxuu hakadaa marka la iska qiyaaso kharashka BOQ la’aan. Kala-baxa Aasaaska, Tiirarka, Korontada & Dhammaystirka ayaa ilaaliya hantidaada."
+  },
+  {
+    "id": "POST-002",
+    "slug": "passive-cooling-architecture-horn-of-africa",
+    "date": "Wed Nov 25",
+    "category": "Architecture",
+    "author": "Principal Architect",
+    "title_en": "Passive Cooling: Designing Modern Buildings Adapted to the Horn of Africa Climate",
+    "title_so": "Hawo-Wareegga Dabiiciga ah: Naqshadaynta Dhismaha La Qabsada Cimilada Geeska Afrika",
+    "body_en": "Strategic orientation, deep cantilevered overhangs, perforated mashrabiya wind screens, and insulated double-leaf walls reduce indoor cooling loads by up to 40% across coastal East Africa.",
+    "body_so": "Jiheynta daaqadaha, hooska dabiiciga ah, shaashadaha hawo-mareenka, iyo derbiyada kulaylka celiya waxay dhimayaan kulaylka gudaha ilaa 40%."
+  },
+  {
+    "id": "POST-003",
+    "slug": "five-mistakes-diaspora-investors-avoid",
+    "date": "Wed Nov 25",
+    "category": "Investor Guide",
+    "author": "Adde Advisory",
+    "title_en": "5 Costly Mistakes Diaspora & Corporate Investors Make When Building Back Home",
+    "title_so": "5 Khalad oo Qaali ah oo Qurbo-joogta & Ganacsatadu Galaan Marka Ay Dhisme Bilaabayaan",
+    "body_en": "Avoid building without soil tests, paying lump sums without milestone inspections, or skipping MEP coordination. Choose milestone-verified Design-Build transparency.",
+    "body_so": "Ka fogow inaad dhisto ciidda oon la baarin, inaad lacag hal mar wada bixiso kormeer la’aan, ama naqshad aan MEP lahayn."
+  }
+]
