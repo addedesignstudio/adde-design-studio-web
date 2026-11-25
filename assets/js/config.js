@@ -7,5 +7,5 @@ export const ADDE_CONFIG = {
   email: 'addedesignstudio@gmail.com',
   defaultLang: 'en',
   heroVideoOrImageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=85',
-  ga4MeasurementId: '' // Optional: Added in Step 10
+  ga4MeasurementId: 'GTM-MZTVWNH' // Optional: Added in Step 10
 };
