@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Journal & Architectural Insights | Adde Design Studio</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <style>
+    .article-modal { position:fixed; inset:0; background:rgba(18,18,18,0.85); z-index:300; display:none; align-items:center; justify-content:center; padding:1.25rem; }
+    .article-modal.open { display:flex; }
+  </style>
+</head>
+<body>
+  <header id="site-header"></header>
+  <main style="padding-top:110px;padding-bottom:5rem;">
+    <div class="container">
+      <div class="eyebrow">ARCHITECTURAL JOURNAL & GUIDES</div>
+      <h1 class="h2-section" id="jTitle">Insights & East Africa Construction Guides</h1>
+      <div id="journalGrid" class="grid-3" style="margin-top:2.5rem;"></div>
+    </div>
+  </main>
+
+  <div id="artModal" class="article-modal">
+    <div class="arch-card" style="max-width:740px;max-height:85vh;overflow-y:auto;width:100%;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <span class="eyebrow" id="mCat" style="margin:0;"></span>
+        <button id="mClose" class="btn btn-outline" style="padding:0.35rem 0.75rem;">Close ✕</button>
+      </div>
+      <h2 class="h2-section" id="mTitle" style="font-size:1.75rem;margin-bottom:0.75rem;"></h2>
+      <div id="mMeta" class="text-muted" style="font-size:0.82rem;margin-bottom:1.5rem;"></div>
+      <div id="mBody" style="line-height:1.8;white-space:pre-line;"></div>
+    </div>
+  </div>
+
+  <footer id="site-footer"></footer>
+  <script type="module">
+    import { initShell } from '/assets/js/components.js';
+    import { fetchStaticJson, escHtml } from '/assets/js/api.js';
+    import { getLang } from '/assets/js/i18n.js';
+    initShell({ transparentHero: false, activePath: 'journal' });
+
+    let posts = [];
+    function render() {
+      const lang = getLang();
+      const isSo = lang === 'so';
+      document.getElementById('jTitle').textContent = isSo ? 'Maqaallada & Talooyinka Dhismaha Bariga Afrika' : 'Insights & East Africa Construction Guides';
+      document.getElementById('journalGrid').innerHTML = posts.map((p, idx) => {
+        const title = isSo ? (p.title_so || p.title_en) : p.title_en;
+        const body = isSo ? (p.body_so || p.body_en) : p.body_en;
+        return `<article class="arch-card" style="display:flex;flex-direction:column;justify-content:space-between;">
+          <div>
+            <div class="eyebrow">${escHtml(p.category)} • ${escHtml(p.date)}</div>
+            <h2 class="font-serif" style="font-size:1.3rem;margin-bottom:0.75rem;">${escHtml(title)}</h2>
+            <p class="text-muted" style="font-size:0.9rem;margin-bottom:1.25rem;">${escHtml(body.slice(0, 160))}...</p>
+          </div>
+          <button class="btn btn-outline read-btn" data-idx="${idx}" style="align-self:flex-start;padding:0.5rem 1rem;">${isSo ? 'Akhri Maqaalka' : 'Read Article'} →</button>
+        </article>`;
+      }).join('');
+
+      document.querySelectorAll('.read-btn').forEach((b) => b.addEventListener('click', () => {
+        const p = posts[Number(b.dataset.idx)];
+        document.getElementById('mCat').textContent = p.category;
+        document.getElementById('mTitle').textContent = isSo ? (p.title_so || p.title_en) : p.title_en;
+        document.getElementById('mMeta').textContent = `${p.author} • ${p.date}`;
+        document.getElementById('mBody').textContent = isSo ? (p.body_so || p.body_en) : p.body_en;
+        document.getElementById('artModal').classList.add('open');
+      }));
+    }
+    document.getElementById('mClose').onclick = () => document.getElementById('artModal').classList.remove('open');
+    window.addEventListener('adde:langchange', render);
+    (async () => { posts = await fetchStaticJson('/data/journal.json').catch(() => []); render(); })();
+  </script>
+</body>
+</html>
