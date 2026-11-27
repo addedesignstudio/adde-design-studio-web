@@ -1,5 +1,36 @@
 [
   {
+    "id": "ADDE-DES-000",
+    "slug": "hodan-multi-storey-mixed-use-residence-b-g-6-mogadishu",
+    "title_en": "Hodan Multi-Storey Mixed-Use Residence (B+G+6)",
+    "title_so": "Hodan Multi-Storey Mixed-Use Residence (B+G+6) (Mogadishu)",
+    "category": "Residential",
+    "status": "3D Concept",
+    "city": "Mogadishu",
+    "area_sqm": 1950,
+    "year": 2026,
+    "scope": "Design & Engineering Phase",
+    "challenge_en": "Engineering a 1950 m² residential development in Mogadishu balancing structural efficiency, passive climate cooling, and clear spatial flow.",
+    "challenge_so": "Naqshadaynta mashruuc 1950 m² ah gudaha Mogadishu iyadoo la isku dheelitirayo adkeysiga dhismaha, hawo-wareegga dabiiciga ah, iyo bilic casri ah.",
+    "solution_en": "Delivered complete architectural plans, 3D visualization, coastal concrete & MEP engineering specs, and transparent BOQ costing ready for execution.",
+    "solution_so": "Waxaa loo diyaariyay naqshado 2D/3D ah oo dhammaystiran, xisaabinta shubka & MEP, iyo BOQ suuqa gobolka ah.",
+    "render_url": "https://ik.imagekit.io/koxbtc8ou/tr:f-auto,q-82,w-1600/projects/adde-des-000/_3D100__IMG_4754_Le0hUlUDL.jpeg",
+    "reality_or_section_url": "https://ik.imagekit.io/koxbtc8ou/tr:f-auto,q-82,w-1600/projects/adde-des-000/_3D300__IMG_4755_bFSkzrBTj.jpeg",
+    "gallery": [
+      "https://ik.imagekit.io/koxbtc8ou/tr:f-auto,q-82,w-1600/projects/adde-des-000/_3D200__IMG_4760_B2e796K2k.jpeg",
+      "https://ik.imagekit.io/koxbtc8ou/tr:f-auto,q-82,w-1600/projects/adde-des-000/_3D300__IMG_4755_bFSkzrBTj.jpeg",
+      "https://ik.imagekit.io/koxbtc8ou/tr:f-auto,q-82,w-1600/projects/adde-des-000/_A300__15X15M_4_APARTNMENTS-5_4Tmfy77in.png",
+      "https://ik.imagekit.io/koxbtc8ou/tr:f-auto,q-82,w-1600/projects/adde-des-000/_A202__15X15M_4_APARTNMENTS-3_RRg3M2Ye5.png",
+      "https://ik.imagekit.io/koxbtc8ou/tr:f-auto,q-82,w-1600/projects/adde-des-000/_A201__15X15M_4_APARTNMENTS-2_6E3mZOLDi.png"
+    ],
+    "floorplan_url": "https://ik.imagekit.io/koxbtc8ou/tr:f-auto,q-82,w-1600/projects/adde-des-000/_A202__15X15M_4_APARTNMENTS-3_RRg3M2Ye5.png",
+    "youtube_id": "rwEJkO_sGjM",
+    "sketchfab_id": "",
+    "lat": 2.0469,
+    "lng": 45.3182,
+    "featured": true
+  },
+  {
     "id": "ADDE-CON-001",
     "slug": "darussalam-coastal-villa-mogadishu",
     "title_en": "Darussalam Passive-Cooling Courtyard Villa",
@@ -97,6 +128,6 @@
     "sketchfab_id": "",
     "lat": 11.588,
     "lng": 43.1456,
-    "featured": true
+    "featured": false
   }
 ]
